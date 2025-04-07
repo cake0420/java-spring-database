@@ -182,3 +182,4 @@ java.lang.IllegalStateException: Failed to retrieve PlatformTransactionManager f
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
 [2025-04-07 14:52:54] [main] ERROR c.c.d.m.repository.JdbcRepository - SQL Exception: Duplicate entry 'test2@example.com' for key 'users.email'
 [2025-04-07 15:16:41] [main] ERROR c.c.d.m.repository.JdbcRepository - SQL Exception: Duplicate entry 'test2@example.com' for key 'users.email'
+[2025-04-07 15:35:34] [main] ERROR c.c.d.m.repository.JdbcRepository - SQL Exception: Duplicate entry 'test2@example.com' for key 'users.email'

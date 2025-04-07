@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 @Repository
@@ -55,13 +54,13 @@ public class UserRepository implements JdbcRepository<Users, byte[]> {
 
     @Override
     public Map<String, Object> entityToMap(Users user) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", user.getId());
-        map.put("name", user.getName());
-        map.put("email", user.getEmail());
-        map.put("password", user.getPassword());
-        map.put("salt", user.getSalt());
-        return map;
+        return Map.of(
+                "id", user.getId(),
+                "name", user.getName(),
+                "email", user.getEmail(),
+                "password", user.getPassword(),
+                "salt", user.getSalt()
+        );
     }
 
 }
