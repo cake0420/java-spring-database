@@ -1,3 +1,5 @@
+package com.cake7.database.service;
+
 import com.cake7.database.config.AppConfig;
 import com.cake7.database.config.DatabaseConfig;
 import com.cake7.database.domain.Users;
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @Rollback
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // JUnit이 생성자 주입 허용
-public class SignUpTest {
+public class SignUpServiceTest {
 
     private final UserRepository userRepository;
     private final UuidToBinary uuidToBinary;
@@ -30,7 +32,7 @@ public class SignUpTest {
     private Users testUser;
 
     @Autowired
-    public SignUpTest(UserRepository userRepository, UuidToBinary uuidToBinary, Encrypt encrypt) {
+    public SignUpServiceTest(UserRepository userRepository, UuidToBinary uuidToBinary, Encrypt encrypt) {
         this.userRepository = userRepository;
         this.uuidToBinary = uuidToBinary;
         this.encrypt = encrypt;
