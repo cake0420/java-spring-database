@@ -7,7 +7,6 @@ import com.cake7.database.util.Encrypt;
 import com.cake7.database.util.UuidToBinary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class SignUpServiceImpl implements SignUpService {
     private final Encrypt encrypt;
     private final UuidToBinary uuidToBinary;
 
-    @Autowired
     public SignUpServiceImpl(UserRepository userRepository, Encrypt encrypt, UuidToBinary uuidToBinary) {
         this.userRepository = userRepository;
         this.encrypt = encrypt;

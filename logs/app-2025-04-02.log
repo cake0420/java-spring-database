@@ -1,0 +1,5 @@
+[2025-04-02 23:13:47] [main] INFO  com.cake7.database.LoggerTest - test
+[2025-04-02 23:14:14] [main] INFO  com.cake7.database.LoggerTest - test
+[2025-04-02 23:14:14] [main] WARN  com.cake7.database.LoggerTest - test
+[2025-04-02 23:14:14] [main] ERROR com.cake7.database.LoggerTest - test
+[2025-04-02 23:14:14] [main] DEBUG com.cake7.database.LoggerTest - test
