@@ -2,7 +2,7 @@ package com.cake7.database.model.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ public interface JdbcRepository<T, ID> {
     Logger logger = LoggerFactory.getLogger(JdbcRepository.class);
 
     Map<String, Object> entityToMap(T entity);
-    JdbcOperations getJdbcTemplate();
+    JdbcTemplate getJdbcTemplate();
     String getTableName();
     RowMapper<T> getRowMapper();
 
