@@ -30,7 +30,7 @@ public class SignUpServiceImpl implements SignUpService {
         this.encrypt = encrypt;
         this.uuidToBinary = uuidToBinary;
     }
-
+    
     @Override
     public Users signUp(SignUpRequestDTO signUpRequestDTO) throws Exception {
         if (userRepository.existByEmail(signUpRequestDTO.email())) {
@@ -51,7 +51,7 @@ public class SignUpServiceImpl implements SignUpService {
                         salt
                 );
 
-
+                logger.debug(newUser.toString());
                 userRepository.save(newUser);
                 return newUser;
 
