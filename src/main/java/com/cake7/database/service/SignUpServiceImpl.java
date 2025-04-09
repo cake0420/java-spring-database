@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.rmi.ServerException;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Service
@@ -55,15 +54,14 @@ public class SignUpServiceImpl implements SignUpService {
                 userRepository.save(newUser);
                 return newUser;
 
-        } catch (SQLException e) {
-            logger.error("SQL Exception: " + e.getMessage());
-            throw new SQLException("쿼리 실행 중 오류 발생" +e.getMessage());
-
+        } catch (DuplicateKeyException e) {
+            logger.error("Duplicate key: " + e.getMessage());
+            throw e;
         } catch (DataAccessResourceFailureException e) {
-            logger.error("DataAccessResourceFailureException: " + e.getMessage());
-            throw new DataAccessResourceFailureException("데이터베이스 연결 또는 쿼리 실행 중 오류 발생" +e.getMessage());
+            logger.error("Database connection error: " + e.getMessage());
+            throw e;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error during sign up: " + e.getMessage());
             throw new ServerException(e.getMessage());
         }
     }

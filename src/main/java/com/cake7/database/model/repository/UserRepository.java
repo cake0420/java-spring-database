@@ -1,14 +1,14 @@
     package com.cake7.database.model.repository;
 
     import com.cake7.database.domain.Users;
-    import org.springframework.dao.DataAccessResourceFailureException;
+    import org.springframework.dao.EmptyResultDataAccessException;
+    import org.springframework.jdbc.core.JdbcOperations;
+    import org.springframework.jdbc.core.JdbcTemplate;
     import org.springframework.jdbc.core.RowMapper;
     import org.springframework.stereotype.Repository;
 
-    import javax.sql.DataSource;
-    import java.sql.Connection;
-    import java.sql.PreparedStatement;
-    import java.sql.ResultSet;
+    import javax.sql.rowset.serial.SerialException;
+    import java.rmi.ServerException;
     import java.sql.SQLException;
     import java.util.Map;
     import java.util.Optional;
@@ -16,15 +16,18 @@
     @Repository
     public class UserRepository implements JdbcRepository<Users, byte[]> {
 
-        private final DataSource dataSource;
+        private final JdbcTemplate jdbcTemplate;
+        private final RowMapper<Users> rowMapper = (rs, rowNum)
+                -> new Users(
+                    rs.getBytes("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("salt")
+                );
 
-        public UserRepository(DataSource dataSource) {
-            this.dataSource = dataSource;
-        }
-
-        @Override
-        public DataSource getDataSource() {
-            return dataSource;
+        public UserRepository(JdbcTemplate jdbcTemplate) {
+            this.jdbcTemplate = jdbcTemplate;
         }
 
         @Override
@@ -33,55 +36,37 @@
         }
 
         @Override
-        public RowMapper<Users> rowMapper() {
-            return (rs, rowNum) -> new Users(rs.getBytes("id"),
-                    rs.getString("email"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("salt")); // 이게 빠지면 null 나와
+        public RowMapper<Users> getRowMapper() {
+            return null;
         }
 
+        @Override
+        public JdbcOperations getJdbcTemplate() {
+            return null;
+        }
 
         public boolean existByEmail(String email) throws SQLException {
             String sql = "SELECT count(*) FROM " + getTableName() + " WHERE email = ? LIMIT 1";
-            try(Connection conn = getDataSource().getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setObject(1, email);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next()) {
-                        return rs.getInt(1) > 0;
-                    }
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception: " + e.getMessage());
-                throw new SQLException("쿼리 실행 중 오류 발생" +e.getMessage());
-
-            } catch (DataAccessResourceFailureException e) {
-                logger.error("DataAccessResourceFailureException: " + e.getMessage());
-                throw new DataAccessResourceFailureException("데이터베이스 연결 또는 쿼리 실행 중 오류 발생" +e.getMessage());
+            try {
+                Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+                return count != null && count > 0;
+            } catch (Exception e) {
+                logger.error("Error checking if email exists: " + e.getMessage());
+                throw new SerialException("server error: " + e.getMessage());
             }
-            return false;
         }
 
-        public Optional<Users> findByEmail(String email, RowMapper<Users> rowMapper) throws SQLException {
+        public Optional<Users> findByEmail(String email) throws ServerException {
             String sql = "SELECT * FROM " + getTableName() + " WHERE email = ?";
-            try(Connection conn = getDataSource().getConnection()) {
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, email);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next()) {
-                        return Optional.of(rowMapper.mapRow(rs, 1));
-                    }
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception: " + e.getMessage());
-                throw new SQLException("SQL Exception: " + e.getMessage());
-            } catch (DataAccessResourceFailureException e) {
-                logger.error("DataAccessResourceFailureException: " + e.getMessage());
-                throw new DataAccessResourceFailureException("SQL Exception: " + e.getMessage());
+            try {
+                Users user = jdbcTemplate.queryForObject(sql, rowMapper, email);
+                return Optional.ofNullable(user);
+            } catch (EmptyResultDataAccessException e) {
+                throw new EmptyResultDataAccessException("User with email '" + email + "' not found", 1);
+            } catch (Exception e) {
+                logger.error("Error finding by email: " + e.getMessage());
+                throw new ServerException("server error: " + e.getMessage());
             }
-            return Optional.empty();
         }
 
         @Override

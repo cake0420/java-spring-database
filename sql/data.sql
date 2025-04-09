@@ -29,3 +29,16 @@ CREATE TABLE book_loans (
     CONSTRAINT fk_book_id FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
 
+CREATE TABLE user_sessions (
+    session_id BINARY(16) PRIMARY KEY,
+    user_id BINARY(16) NOT NULL,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_accessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    expired_at TIMESTAMP,
+    is_valid BOOLEAN DEFAULT TRUE,
+
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
