@@ -20,7 +20,7 @@ public interface JdbcRepository<T, ID> {
     Map<String, Object> entityToMap(T entity);
     DataSource getDataSource();
     String getTableName();
-    RowMapper<T> rowMapper();
+    RowMapper<T> getRowMapper();
 
     default Optional<T> findById(ID id,  RowMapper<T> rowMapper) throws Exception {
         String sql = "SELECT * FROM " + getTableName() + " WHERE id = ?";

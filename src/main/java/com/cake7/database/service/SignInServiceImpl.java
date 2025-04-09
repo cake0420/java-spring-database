@@ -25,7 +25,7 @@ public class SignInServiceImpl implements SignInService {
 
     public Optional<Users> signIn(String email, String password) throws SQLException, ServerException {
         try {
-            Optional<Users> user =  userRepository.findByEmail(email, userRepository.rowMapper());
+            Optional<Users> user =  userRepository.findByEmail(email, userRepository.getRowMapper());
             if (user.isPresent()) {
                 String encryptPassword = encrypt.getEncrypt(password, user.get().getSalt());
                 if(user.get().getPassword().equals(encryptPassword + user.get().getSalt())) {

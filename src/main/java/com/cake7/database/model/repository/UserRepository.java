@@ -17,6 +17,14 @@
     public class UserRepository implements JdbcRepository<Users, byte[]> {
 
         private final DataSource dataSource;
+        private final RowMapper<Users> getRowMapper = (rs, rowNum)
+                -> new Users(
+                rs.getBytes("id"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("salt")
+        );
 
         public UserRepository(DataSource dataSource) {
             this.dataSource = dataSource;
@@ -33,14 +41,9 @@
         }
 
         @Override
-        public RowMapper<Users> rowMapper() {
-            return (rs, rowNum) -> new Users(rs.getBytes("id"),
-                    rs.getString("email"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("salt")); // 이게 빠지면 null 나와
+        public RowMapper<Users> getRowMapper() {
+            return getRowMapper;
         }
-
 
         public boolean existByEmail(String email) throws SQLException {
             String sql = "SELECT count(*) FROM " + getTableName() + " WHERE email = ? LIMIT 1";
@@ -66,8 +69,8 @@
 
         public Optional<Users> findByEmail(String email, RowMapper<Users> rowMapper) throws SQLException {
             String sql = "SELECT * FROM " + getTableName() + " WHERE email = ?";
-            try(Connection conn = getDataSource().getConnection()) {
-                PreparedStatement pstmt = conn.prepareStatement(sql);
+            try(Connection conn = getDataSource().getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, email);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
