@@ -60,7 +60,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
         return getRowMapper;
     }
 
-    public int DeleteByUserId(byte[] userId) throws ServerException {
+    public int deleteByUserId(byte[] userId) throws ServerException {
         String sql = """
                     DELETE FROM %s WHERE user_id = ?
                 """.formatted(getTableName());
@@ -116,6 +116,18 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
         } catch (Exception e) {
             logger.error("Error saving user session: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to save user session", e);
+        }
+    }
+
+    public int deleteExpiredSessions() throws ServerException {
+        String sql = """
+                    DELETE FROM %s WHERE expired_at < NOW() OR is_valid = false
+                """.formatted(getTableName());
+        try {
+            return getJdbcTemplate().update(sql);
+        } catch (Exception e) {
+            logger.error("Error deleting expired sessions: {}", e.getMessage(), e);
+            throw new ServerException("Error deleting expired sessions: " + e.getMessage());
         }
     }
 

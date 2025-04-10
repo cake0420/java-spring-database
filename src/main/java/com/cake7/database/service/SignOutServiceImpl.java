@@ -27,7 +27,7 @@ public class SignOutServiceImpl implements SignOutService {
         UUID uuid = UUID.fromString(signOutRequestDTO.userId());
         byte[] binary = uuidToBinary.uuidToBytes(uuid);
         try {
-                int count = userSessionRepository.DeleteByUserId(binary);
+                int count = userSessionRepository.deleteByUserId(binary);
                 logger.debug("delete user id: {}", Arrays.toString(binary));
                 return count > 0;
         } catch (IllegalArgumentException e) {
