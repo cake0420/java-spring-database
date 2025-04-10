@@ -44,7 +44,7 @@ public class SignInServiceImpl implements SignInService {
             if (user.isPresent()) {
                 String encryptPassword = encrypt.getEncrypt(signInRequestDTO.password(), user.get().getSalt());
                 if(user.get().getPassword().equals(encryptPassword)) {
-                    logger.debug(user.get().getEmail());
+                    logger.debug("user email: {}", user.get().getEmail());
 
                     UserSession userSession = new UserSession(
                                                                 uuidToBinary.uuidToBytes(sessionUUID),
@@ -57,14 +57,14 @@ public class SignInServiceImpl implements SignInService {
                                                                 true
                                                             );
                     userSessionRepository.save(userSession);
-                    logger.debug(userSession.toString());
+                    logger.debug("user session id: {}", userSession);
                     return userSession.getSessionId();
                 }
             }
             return null;
         }
         catch (Exception e) {
-            logger.error("Error during sign in: " + e.getMessage());
+            logger.error("Error during sign in: {}", e.getMessage());
             throw new ServerException(e.getMessage());
         }
     }

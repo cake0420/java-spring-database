@@ -115,7 +115,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
                 getJdbcTemplate().update(insertSql, values);
             }
         } catch (Exception e) {
-            logger.error("Error saving user session: " + e.getMessage(), e);
+            logger.error("Error saving user session: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to save user session", e);
         }
     }

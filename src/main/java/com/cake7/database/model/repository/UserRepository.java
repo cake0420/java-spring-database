@@ -53,7 +53,7 @@
                 Integer count = getJdbcTemplate().queryForObject(sql, Integer.class, email);
                 return count != null && count > 0;
             } catch (Exception e) {
-                logger.error("Error checking if email exists: " + e.getMessage());
+                logger.error("Error checking if email exists: {}", e.getMessage());
                 throw new ServerException("server error: " + e.getMessage());
             }
         }
@@ -68,8 +68,8 @@
             }  catch (EmptyResultDataAccessException e) {
                 return Optional.empty();
             } catch (Exception e) {
-                logger.error("Error finding by email: " + e.getMessage());
-                throw new ServerException("server error: " + e.getMessage());
+                logger.error("Error finding by email: {}",e.getMessage());
+                throw new ServerException("server error: "+ e.getMessage());
             }
         }
 
