@@ -24,10 +24,11 @@ public class SignOutServiceImpl implements SignOutService {
 
     @Override
     public boolean signOut(SignOutRequestDTO signOutRequestDTO) throws Exception {
-        UUID uuid = UUID.fromString(signOutRequestDTO.userId());
+        UUID uuid = UUID.fromString(signOutRequestDTO.sessionId());
         byte[] binary = uuidToBinary.uuidToBytes(uuid);
+        logger.debug(uuid.toString());
         try {
-                int count = userSessionRepository.deleteByUserId(binary);
+                int count = userSessionRepository.deleteBySessionId(binary);
                 logger.debug("delete user id: {}", Arrays.toString(binary));
                 return count > 0;
         } catch (IllegalArgumentException e) {

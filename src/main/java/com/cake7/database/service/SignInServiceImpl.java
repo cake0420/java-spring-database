@@ -5,6 +5,7 @@ import com.cake7.database.domain.Users;
 import com.cake7.database.dto.SignInRequestDTO;
 import com.cake7.database.repository.UserRepository;
 import com.cake7.database.repository.UserSessionRepository;
+import com.cake7.database.util.BinaryToUuid;
 import com.cake7.database.util.Encrypt;
 import com.cake7.database.util.UuidToBinary;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,16 +27,18 @@ public class SignInServiceImpl implements SignInService {
     private final Encrypt encrypt;
     private final UuidToBinary uuidToBinary;
     private final UserSessionRepository userSessionRepository;
+    private final BinaryToUuid binaryToUuid;
 
-    public SignInServiceImpl(HttpServletRequest request, UserRepository userRepository, Encrypt encrypt, UuidToBinary uuidToBinary, UserSessionRepository userSessionRepository) {
+    public SignInServiceImpl(HttpServletRequest request, UserRepository userRepository, Encrypt encrypt, UuidToBinary uuidToBinary, UserSessionRepository userSessionRepository, BinaryToUuid binaryToUuid) {
         this.request = request;
         this.userRepository = userRepository;
         this.encrypt = encrypt;
         this.uuidToBinary = uuidToBinary;
         this.userSessionRepository = userSessionRepository;
+        this.binaryToUuid = binaryToUuid;
     }
 
-    public byte[] signIn(SignInRequestDTO signInRequestDTO) throws ServerException {
+    public UUID signIn(SignInRequestDTO signInRequestDTO) throws ServerException {
         try {
             Optional<Users> user = userRepository.findByEmail(signInRequestDTO.email());
             LocalDateTime now = LocalDateTime.now();
@@ -58,7 +61,7 @@ public class SignInServiceImpl implements SignInService {
                                                             );
                     userSessionRepository.save(userSession);
                     logger.debug("user session id: {}", userSession);
-                    return userSession.getSessionId();
+                    return binaryToUuid.convertBytesToUuid(userSession.getSessionId());
                 }
             }
             return null;

@@ -60,12 +60,12 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
         return getRowMapper;
     }
 
-    public int deleteByUserId(byte[] userId) throws ServerException {
+    public int deleteBySessionId(byte[] sessionId) throws ServerException {
         String sql = """
-                    DELETE FROM %s WHERE user_id = ?
+                    DELETE FROM %s WHERE session_id = ?
                 """.formatted(getTableName());
         try {
-            return getJdbcTemplate().update(sql, userId);
+            return getJdbcTemplate().update(sql, sessionId);
         } catch (Exception e) {
             logger.error("Error checking if user id exists: {}", e.getMessage());
             throw new ServerException("server error: " + e.getMessage());

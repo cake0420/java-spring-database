@@ -57,7 +57,7 @@
             })
             .then(data => {
               alert('로그인이 완료되었습니다.');
-              window.location.href = '${pageContext.request.contextPath}/';
+              window.location.href = '../..';
             })
             .catch(error => {
               alert('로그인 실패: ' + error.message);

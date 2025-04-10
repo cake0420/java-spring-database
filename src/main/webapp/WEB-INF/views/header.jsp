@@ -1,5 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 캐시 방지 헤더 --%>
+<%
+  response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  response.setHeader("Pragma", "no-cache");
+  response.setDateHeader("Expires", 0);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,3 +54,30 @@
     </div>
   </div>
 </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('logoutLink')?.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    const sessionId = '${sessionScope.SESSION_ID}';
+    fetch('${pageContext.request.contextPath}/api/sign-out', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ sessionId: sessionId })
+    })
+            .then(response => response.text())
+            .then(data => {
+              alert(data);
+              // 캐시된 내용 제거 후 홈으로
+              window.location.href = '${pageContext.request.contextPath}/';
+            })
+            .catch(error => {
+              console.error('로그아웃 실패:', error);
+              alert('로그아웃 처리 중 오류가 발생했습니다.');
+            });
+  });
+</script>
