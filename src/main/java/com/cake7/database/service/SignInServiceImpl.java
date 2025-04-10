@@ -2,6 +2,7 @@ package com.cake7.database.service;
 
 import com.cake7.database.domain.UserSession;
 import com.cake7.database.domain.Users;
+import com.cake7.database.model.dto.SignInRequestDTO;
 import com.cake7.database.model.repository.UserRepository;
 import com.cake7.database.model.repository.UserSessionRepository;
 import com.cake7.database.util.Encrypt;
@@ -34,15 +35,15 @@ public class SignInServiceImpl implements SignInService {
         this.userSessionRepository = userSessionRepository;
     }
 
-    public Optional<Users> signIn(String email, String password) throws ServerException {
+    public byte[] signIn(SignInRequestDTO signInRequestDTO) throws ServerException {
         try {
-            Optional<Users> user = userRepository.findByEmail(email);
+            Optional<Users> user = userRepository.findByEmail(signInRequestDTO.email());
             LocalDateTime now = LocalDateTime.now();
             UUID sessionUUID = UUID.randomUUID();
 
             if (user.isPresent()) {
-                String encryptPassword = encrypt.getEncrypt(password, user.get().getSalt());
-                if(user.get().getPassword().equals(encryptPassword + user.get().getSalt())) {
+                String encryptPassword = encrypt.getEncrypt(signInRequestDTO.password(), user.get().getSalt());
+                if(user.get().getPassword().equals(encryptPassword)) {
                     logger.debug(user.get().getEmail());
 
                     UserSession userSession = new UserSession(
@@ -57,10 +58,10 @@ public class SignInServiceImpl implements SignInService {
                                                             );
                     userSessionRepository.save(userSession);
                     logger.debug(userSession.toString());
-                    return user;
+                    return userSession.getSessionId();
                 }
             }
-            return Optional.empty();
+            return null;
         }
         catch (Exception e) {
             logger.error("Error during sign in: " + e.getMessage());

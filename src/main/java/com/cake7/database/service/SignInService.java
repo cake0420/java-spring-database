@@ -1,11 +1,10 @@
 package com.cake7.database.service;
 
-import com.cake7.database.domain.Users;
+import com.cake7.database.model.dto.SignInRequestDTO;
 
 import java.rmi.ServerException;
 import java.sql.SQLException;
-import java.util.Optional;
 
 public interface SignInService {
-    Optional<Users> signIn(String email, String password) throws SQLException, ServerException;
+    byte[] signIn(SignInRequestDTO signInRequestDTO) throws SQLException, ServerException;
 }
