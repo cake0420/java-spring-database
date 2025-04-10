@@ -17,12 +17,13 @@ public interface JdbcRepository<T, ID> {
     String getTableName();
     RowMapper<T> getRowMapper();
 
-    default Optional<T> findById(ID id) throws Exception {
+    default Optional<T> findById(ID id) {
         String sql = """
             SELECT * FROM %s WHERE id = ?
         """.formatted(getTableName());
         try {
-            return Optional.ofNullable(getJdbcTemplate().queryForObject(sql, getRowMapper(), id));
+            T result = getJdbcTemplate().queryForObject(sql, getRowMapper(), id);
+            return Optional.ofNullable(result);
         } catch (Exception e) {
             logger.error("Error finding by ID: " + e.getMessage());
             return Optional.empty();

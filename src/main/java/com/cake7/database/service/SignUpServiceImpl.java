@@ -55,13 +55,13 @@ public class SignUpServiceImpl implements SignUpService {
 
         } catch (DuplicateKeyException e) {
             logger.error("Duplicate key: {}",e.getMessage());
-            throw e;
+            throw new DuplicateKeyException("Duplicate key: " + e.getMessage());
         } catch (DataAccessResourceFailureException e) {
             logger.error("Database connection error: {}", e.getMessage());
-            throw e;
+            throw new DataAccessResourceFailureException("Database connection error: " + e.getMessage());
         } catch (Exception e) {
             logger.error("Error during sign up: {}", e.getMessage());
-            throw new ServerException(e.getMessage());
+            throw new ServerException("Error during sign up " + e.getMessage());
         }
     }
 }

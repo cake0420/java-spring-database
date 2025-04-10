@@ -21,7 +21,7 @@ public class SignInController {
         this.signInService = signInService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/sign-in")
     public ResponseEntity<String> doPost(@RequestBody SignInRequestDTO signInRequestDTO, HttpSession httpSession) {
         try {
             byte[] sessionId = signInService.signIn(signInRequestDTO);
