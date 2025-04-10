@@ -44,6 +44,7 @@ public class SignInServiceImpl implements SignInService {
                 String encryptPassword = encrypt.getEncrypt(password, user.get().getSalt());
                 if(user.get().getPassword().equals(encryptPassword + user.get().getSalt())) {
                     logger.debug(user.get().getEmail());
+
                     UserSession userSession = new UserSession(
                                                                 uuidToBinary.uuidToBytes(sessionUUID),
                                                                 user.get().getId(),
@@ -60,7 +61,8 @@ public class SignInServiceImpl implements SignInService {
                 }
             }
             return Optional.empty();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error("Error during sign in: " + e.getMessage());
             throw new ServerException(e.getMessage());
         }

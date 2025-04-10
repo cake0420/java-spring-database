@@ -2,7 +2,6 @@ package com.cake7.database.controller;
 
 import com.cake7.database.domain.Users;
 import com.cake7.database.model.dto.SignInRequestDTO;
-import com.cake7.database.model.dto.UserSessionDTO;
 import com.cake7.database.service.SignInServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -29,15 +28,7 @@ public class SignInController {
                     signInRequestDTO.email(),
                     signInRequestDTO.password()
             );            // 성공 시 user 반환
-            if (user.isPresent()) {
-                UserSessionDTO userSessionDTO = new UserSessionDTO(
-                        user.get().getId(),
-                        user.get().getEmail(),
-                        user.get().getName()
-                );
 
-//                httpSession.setAttribute("user", userSessionDTO);
-            }
             return user.map(users -> ResponseEntity.ok(users.toString())).orElseGet(()
                     -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("아이디 또는 비밀번호가 잘못되었습니다."));
