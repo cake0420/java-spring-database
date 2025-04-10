@@ -2,9 +2,9 @@ package com.cake7.database.service;
 
 import com.cake7.database.domain.UserSession;
 import com.cake7.database.domain.Users;
-import com.cake7.database.model.dto.SignInRequestDTO;
-import com.cake7.database.model.repository.UserRepository;
-import com.cake7.database.model.repository.UserSessionRepository;
+import com.cake7.database.dto.SignInRequestDTO;
+import com.cake7.database.repository.UserRepository;
+import com.cake7.database.repository.UserSessionRepository;
 import com.cake7.database.util.Encrypt;
 import com.cake7.database.util.UuidToBinary;
 import jakarta.servlet.http.HttpServletRequest;

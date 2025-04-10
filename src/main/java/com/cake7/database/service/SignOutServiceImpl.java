@@ -1,7 +1,7 @@
 package com.cake7.database.service;
 
-import com.cake7.database.model.dto.SignOutRequestDTO;
-import com.cake7.database.model.repository.UserSessionRepository;
+import com.cake7.database.dto.SignOutRequestDTO;
+import com.cake7.database.repository.UserSessionRepository;
 import com.cake7.database.util.UuidToBinary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

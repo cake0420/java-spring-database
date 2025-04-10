@@ -1,4 +1,4 @@
-    package com.cake7.database.model.repository;
+    package com.cake7.database.repository;
 
     import com.cake7.database.domain.Users;
     import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.cake7.database.model.repository;
+package com.cake7.database.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

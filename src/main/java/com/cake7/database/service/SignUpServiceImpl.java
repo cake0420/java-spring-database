@@ -1,8 +1,8 @@
 package com.cake7.database.service;
 
 import com.cake7.database.domain.Users;
-import com.cake7.database.model.dto.SignUpRequestDTO;
-import com.cake7.database.model.repository.UserRepository;
+import com.cake7.database.dto.SignUpRequestDTO;
+import com.cake7.database.repository.UserRepository;
 import com.cake7.database.util.Encrypt;
 import com.cake7.database.util.UuidToBinary;
 import org.slf4j.Logger;

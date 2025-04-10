@@ -1,4 +1,4 @@
-package com.cake7.database.model.dto;
+package com.cake7.database.dto;
 
 public record SignUpRequestDTO(String name, String email, String password) {
 }

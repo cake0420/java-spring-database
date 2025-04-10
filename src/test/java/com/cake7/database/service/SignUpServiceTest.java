@@ -3,7 +3,7 @@ package com.cake7.database.service;
 import com.cake7.database.config.AppConfig;
 import com.cake7.database.config.DatabaseConfig;
 import com.cake7.database.domain.Users;
-import com.cake7.database.model.repository.UserRepository;
+import com.cake7.database.repository.UserRepository;
 import com.cake7.database.util.Encrypt;
 import com.cake7.database.util.UuidToBinary;
 import org.junit.jupiter.api.BeforeEach;

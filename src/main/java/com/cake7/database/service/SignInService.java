@@ -1,6 +1,6 @@
 package com.cake7.database.service;
 
-import com.cake7.database.model.dto.SignInRequestDTO;
+import com.cake7.database.dto.SignInRequestDTO;
 
 import java.rmi.ServerException;
 import java.sql.SQLException;

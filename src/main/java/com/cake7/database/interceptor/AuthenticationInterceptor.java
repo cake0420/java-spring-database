@@ -1,6 +1,6 @@
 package com.cake7.database.interceptor;
 
-import com.cake7.database.model.dto.UserSessionDTO;
+import com.cake7.database.dto.UserSessionDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

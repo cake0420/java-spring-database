@@ -1,6 +1,6 @@
 package com.cake7.database.controller;
 
-import com.cake7.database.model.dto.SignOutRequestDTO;
+import com.cake7.database.dto.SignOutRequestDTO;
 import com.cake7.database.service.SignOutServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.cake7.database.controller;
 
-import com.cake7.database.model.dto.SignInRequestDTO;
-import com.cake7.database.model.dto.UserSessionDTO;
+import com.cake7.database.dto.SignInRequestDTO;
+import com.cake7.database.dto.UserSessionDTO;
 import com.cake7.database.service.SignInServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
