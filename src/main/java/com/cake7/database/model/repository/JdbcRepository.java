@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.rmi.ServerException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ public interface JdbcRepository<T, ID> {
     RowMapper<T> getRowMapper();
 
     default Optional<T> findById(ID id) throws Exception {
-        String sql = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        String sql = """
+            SELECT * FROM %s WHERE id = ?
+        """.formatted(getTableName());
         try {
             return Optional.ofNullable(getJdbcTemplate().queryForObject(sql, getRowMapper(), id));
         } catch (Exception e) {
@@ -27,7 +30,7 @@ public interface JdbcRepository<T, ID> {
     }
 
 
-    default void save(T entity) {
+    default void save(T entity) throws ServerException {
         Map<String, Object> columnValues = entityToMap(entity);
         if (columnValues.isEmpty()) {
             throw new IllegalArgumentException("Entity must have at least one column value");
@@ -38,7 +41,9 @@ public interface JdbcRepository<T, ID> {
                 .map(k -> "?")
                 .toList());
 
-        String sql = "INSERT INTO " + getTableName() + " (" + columns + ") VALUES (" + placeholders + ")";
+        String sql =  """
+                    INSERT INTO %s (%s) VALUES (%s)
+                """.formatted(getTableName(), columns, placeholders);
 
         Object[] values = columnValues.values().toArray();
 
@@ -46,7 +51,7 @@ public interface JdbcRepository<T, ID> {
             getJdbcTemplate().update(sql, values);
         } catch (Exception e) {
             logger.error("Error saving entity: " + e.getMessage());
-            throw e;
+            throw new ServerException("server error " + e.getMessage());
         }
     }
 }

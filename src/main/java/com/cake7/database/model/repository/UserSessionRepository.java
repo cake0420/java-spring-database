@@ -61,7 +61,9 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
     }
 
     public boolean existByUserId(byte[] userId) throws ServerException {
-        String sql = "SELECT count(*) FROM " + getTableName() + " WHERE user_id = ? LIMIT 1";
+        String sql = """
+                    SELECT count(*) FROM %s WHERE user_id = ? LIMIT 1
+                """.formatted(getTableName());
         try {
             Integer count = getJdbcTemplate().queryForObject(sql, Integer.class, (Object) userId);
             return count != null && count > 0;
@@ -79,14 +81,14 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
         }
 
         String checkSql = """
-        SELECT CASE 
+        SELECT CASE\s
             WHEN EXISTS (
-                SELECT 1 FROM user_sessions 
+                SELECT 1 FROM %s\s
                 WHERE user_id = ? AND ip_address = ? AND user_agent = ? AND is_valid = true
-            ) THEN 1 
-            ELSE 0 
+            ) THEN 1\s
+            ELSE 0\s
         END
-        """;
+       \s""".formatted(getTableName());
 
         try {
             boolean exists = Boolean.TRUE.equals(getJdbcTemplate().queryForObject(
@@ -96,17 +98,19 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
 
             if (exists) {
                 String updateSql = """
-                UPDATE user_sessions 
-                SET last_accessed_at = NOW(), 
-                    expired_at = DATE_ADD(NOW(), INTERVAL 7 DAY) 
+                UPDATE %s\s
+                SET last_accessed_at = NOW(),\s
+                    expired_at = DATE_ADD(NOW(), INTERVAL 7 DAY)\s
                 WHERE user_id = ? AND ip_address = ? AND user_agent = ? AND is_valid = true
-            """;
+           \s""".formatted(getTableName());
                 getJdbcTemplate().update(updateSql,
                         entity.getUserId(), entity.getIpAddress(), entity.getUserAgent());
             } else {
                 String columns = String.join(", ", columnValues.keySet());
                 String placeholders = String.join(", ", columnValues.keySet().stream().map(k -> "?").toList());
-                String insertSql = "INSERT INTO " + getTableName() + " (" + columns + ") VALUES (" + placeholders + ")";
+                String insertSql = """
+                    INSERT INTO %s (%s) VALUES (%s)
+                """.formatted(getTableName(), columns, placeholders);
                 Object[] values = columnValues.values().toArray();
                 getJdbcTemplate().update(insertSql, values);
             }

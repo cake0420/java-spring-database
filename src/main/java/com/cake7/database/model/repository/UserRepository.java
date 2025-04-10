@@ -46,7 +46,9 @@
 
 
         public boolean existByEmail(String email) throws ServerException {
-            String sql = "SELECT count(*) FROM " + getTableName() + " WHERE email = ? LIMIT 1";
+            String sql = """
+                        SELECT count(*) FROM %s WHERE email = ? LIMIT 1
+                    """.formatted(getTableName());
             try {
                 Integer count = getJdbcTemplate().queryForObject(sql, Integer.class, email);
                 return count != null && count > 0;
@@ -57,7 +59,9 @@
         }
 
         public Optional<Users> findByEmail(String email) throws ServerException {
-            String sql = "SELECT * FROM " + getTableName() + " WHERE email = ?";
+            String sql = """
+                    SELECT * FROM %s WHERE email = ?
+                """.formatted(getTableName());
             try {
                 Users user = getJdbcTemplate().queryForObject(sql, getRowMapper(), email);
                 return Optional.ofNullable(user);

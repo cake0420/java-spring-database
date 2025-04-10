@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 public class SignInServiceImpl implements SignInService {
     private final HttpServletRequest request;
-    Logger logger = LoggerFactory.getLogger(SignInServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(SignInServiceImpl.class);
     private final UserRepository userRepository;
     private final Encrypt encrypt;
     private final UuidToBinary uuidToBinary;
