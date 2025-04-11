@@ -57,27 +57,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  document.getElementById('logoutLink')?.addEventListener('click', function(e) {
+  document.getElementById('logoutLink')?.addEventListener('click', async function(e) {
     e.preventDefault();
 
     const sessionId = '${sessionScope.SESSION_ID}';
-    fetch('${pageContext.request.contextPath}/api/sign-out', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ sessionId: sessionId })
-    })
-            .then(response => response.text())
-            .then(data => {
-              alert(data);
-              // 캐시된 내용 제거 후 홈으로
-              window.location.href = '${pageContext.request.contextPath}/';
-            })
-            .catch(error => {
-              console.error('로그아웃 실패:', error);
-              alert('로그아웃 처리 중 오류가 발생했습니다.');
-            });
+    try {
+      const response = await fetch('${pageContext.request.contextPath}/api/sign-out', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ sessionId })
+      });
+
+      const data = await response.text();
+
+      alert(data);
+      // 캐시된 내용 제거 후 홈으로 이동
+      window.location.href = '${pageContext.request.contextPath}/';
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      alert('로그아웃 처리 중 오류가 발생했습니다.');
+    }
   });
 </script>

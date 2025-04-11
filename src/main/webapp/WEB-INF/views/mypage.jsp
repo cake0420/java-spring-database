@@ -43,34 +43,35 @@
 
 <script>
 
-    // 사용자 정보 가져오기 (실제 구현 시 API 호출)
-    function loadUserData() {
-        const sessionId = '${sessionScope.SESSION_ID}';
-        fetch('${pageContext.request.contextPath}/api/protected/mypage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                sessionId : sessionId
-            })
-        }).then(response =>{
+    // 사용자 정보 가져오기
+    async function loadUserData() {
+        try {
+            const sessionId = '${sessionScope.SESSION_ID}';
+            const response = await fetch('${pageContext.request.contextPath}/api/protected/mypage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sessionId })
+            });
+
             if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
+                const text = await response.text();
+                throw new Error(text);
             }
-            return response.json();
-        }).then(data => {
+
+            const data = await response.json();
             document.getElementById('userName').textContent = data.name;
             document.getElementById('userEmail').textContent = data.email;
-        })
-            .catch(error => {
-                alert('사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.:' + error);
-            });
+
+        } catch (error) {
+            alert('사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요: ' + error.message);
+        }
     }
 
-    // 대출 중인 도서 목록 가져오기 (실제 구현 시 API 호출)
-    function loadCurrentLoans() {
-        // 실제 구현 시 API 호출하여 대출 중인 도서 목록 가져오기
+    // 대출 중인 도서 목록 가져오기
+    async function loadCurrentLoans() {
+        // 실제 구현 시 API 호출 필요
         const loansData = [
             { id: 1, title: '자바 프로그래밍', author: '홍길동', dueDate: '2025-04-20' },
             { id: 2, title: '스프링 부트', author: '김영희', dueDate: '2025-04-18' }
@@ -80,16 +81,15 @@
 
         if (loansData.length > 0) {
             let html = '<table class="table table-striped">';
-            html += '<thead><tr><th>제목</th><th>저자</th><th>반납예정일</th><th>액션</th></tr></thead>';
-            html += '<tbody>';
+            html += '<thead><tr><th>제목</th><th>저자</th><th>반납예정일</th><th>액션</th></tr></thead><tbody>';
 
             loansData.forEach(loan => {
                 html += `<tr>
-                    <td>${loan.title}</td>
-                    <td>${loan.author}</td>
-                    <td>${loan.dueDate}</td>
-                    <td><button class="btn btn-sm btn-primary" onclick="returnBook(${loan.id})">반납하기</button></td>
-                </tr>`;
+                <td>${loan.title}</td>
+                <td>${loan.author}</td>
+                <td>${loan.dueDate}</td>
+                <td><button class="btn btn-sm btn-primary" onclick="returnBook(${loan.id})">반납하기</button></td>
+            </tr>`;
             });
 
             html += '</tbody></table>';
@@ -97,9 +97,9 @@
         }
     }
 
-    // 대출 이력 가져오기 (실제 구현 시 API 호출)
-    function loadLoanHistory() {
-        // 실제 구현 시 API 호출하여 대출 이력 가져오기
+    // 대출 이력 가져오기
+    async function loadLoanHistory() {
+        // 실제 구현 시 API 호출 필요
         const historyData = [
             { id: 3, title: 'SQL 기초', author: '이철수', loanDate: '2025-03-10', returnDate: '2025-03-25' },
             { id: 4, title: 'HTML & CSS', author: '박지민', loanDate: '2025-02-15', returnDate: '2025-03-01' }
@@ -109,16 +109,15 @@
 
         if (historyData.length > 0) {
             let html = '<table class="table table-striped">';
-            html += '<thead><tr><th>제목</th><th>저자</th><th>대출일</th><th>반납일</th></tr></thead>';
-            html += '<tbody>';
+            html += '<thead><tr><th>제목</th><th>저자</th><th>대출일</th><th>반납일</th></tr></thead><tbody>';
 
             historyData.forEach(item => {
                 html += `<tr>
-                    <td>${item.title}</td>
-                    <td>${item.author}</td>
-                    <td>${item.loanDate}</td>
-                    <td>${item.returnDate}</td>
-                </tr>`;
+                <td>${item.title}</td>
+                <td>${item.author}</td>
+                <td>${item.loanDate}</td>
+                <td>${item.returnDate}</td>
+            </tr>`;
             });
 
             html += '</tbody></table>';
@@ -126,21 +125,21 @@
         }
     }
 
-    // 도서 반납 함수 (실제 구현 시 API 호출)
-    function returnBook(bookId) {
+    // 도서 반납
+    async function returnBook(bookId) {
         if (confirm('이 도서를 반납하시겠습니까?')) {
-            // 실제 구현 시 API 호출하여 도서 반납 처리
+            // 실제 구현 시 API 호출 필요
             alert('도서가 성공적으로 반납되었습니다.');
-            loadCurrentLoans(); // 목록 새로고침
-            loadLoanHistory(); // 이력 새로고침
+            await loadCurrentLoans();
+            await loadLoanHistory();
         }
     }
 
-    // 페이지 로드 시 데이터 가져오기
-    window.addEventListener('DOMContentLoaded', function() {
-        loadUserData();
-        loadCurrentLoans();
-        loadLoanHistory();
+    // 페이지 로드 시 실행
+    window.addEventListener('DOMContentLoaded', async () => {
+        await loadUserData();
+        await loadCurrentLoans();
+        await loadLoanHistory();
     });
 </script>
 
