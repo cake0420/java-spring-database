@@ -57,8 +57,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  let isLoggingOut = false;
   document.getElementById('logoutLink')?.addEventListener('click', async function(e) {
     e.preventDefault();
+    if (isLoggingOut) return; // 이미 로그아웃 중이면 무시
+    isLoggingOut = true; // 플래그 설정
 
     const sessionId = '${sessionScope.SESSION_ID}';
     try {
@@ -79,6 +82,8 @@
     } catch (error) {
       console.error('로그아웃 실패:', error);
       alert('로그아웃 처리 중 오류가 발생했습니다.');
+    } finally {
+      isLoggingOut = false; // 실패했을 경우 다시 클릭 가능하도록 초기화
     }
   });
 </script>

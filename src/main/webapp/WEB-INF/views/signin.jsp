@@ -32,13 +32,17 @@
 </div>
 
 <script>
+  let isSigningIn = false;
+
   document.getElementById('signinForm').addEventListener('submit', function(e) {
     e.preventDefault();
+
+    if (isSigningIn) return; // 중복 로그인 방지
+    isSigningIn = true; // 로그인 진행 중으로 설정
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    // 로그인 요청 전송
     fetch('${pageContext.request.contextPath}/api/sign-in', {
       method: 'POST',
       headers: {
@@ -51,7 +55,7 @@
     })
             .then(response => {
               if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
+                return response.text().then(text => { throw new Error(text); });
               }
               return response.text();
             })
@@ -61,8 +65,13 @@
             })
             .catch(error => {
               alert('로그인 실패: ' + error.message);
+            })
+            .finally(() => {
+              isSigningIn = false; // 로그인 완료되거나 실패 시 다시 클릭 가능
             });
   });
+
+
 </script>
 
 <%@ include file="footer.jsp" %>
