@@ -31,9 +31,14 @@ public class WebConfig implements WebMvcConfigurer, HandlerInterceptor {
                 .addResourceLocations("/asset/"); // 또는 "classpath:/static/asset/"
     }
 
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor())
+        registry.addInterceptor(authenticationInterceptor())
                 .addPathPatterns("/api/protected/**")  // 보호된 경로 패턴
                 .excludePathPatterns("/api/login", "/api/sign-up");  // 제외할 경로
     }

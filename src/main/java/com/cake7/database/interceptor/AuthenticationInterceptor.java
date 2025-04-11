@@ -20,7 +20,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (session == null || session.getAttribute("SESSION_ID") == null) {
             logger.debug("Unauthorized access attempt to {}", request.getRequestURI());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("로그인이 필요합니다.");
             return false;
         }
 
