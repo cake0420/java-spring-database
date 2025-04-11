@@ -3,8 +3,8 @@ package com.cake7.database.service;
 import com.cake7.database.domain.Users;
 import com.cake7.database.dto.SignUpRequestDTO;
 import com.cake7.database.repository.UserRepository;
+import com.cake7.database.util.Convert;
 import com.cake7.database.util.Encrypt;
-import com.cake7.database.util.UuidToBinary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -22,12 +22,12 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final UserRepository userRepository;
     private final Encrypt encrypt;
-    private final UuidToBinary uuidToBinary;
+    private final Convert convert;
 
-    public SignUpServiceImpl(UserRepository userRepository, Encrypt encrypt, UuidToBinary uuidToBinary) {
+    public SignUpServiceImpl(UserRepository userRepository, Encrypt encrypt, Convert convert) {
         this.userRepository = userRepository;
         this.encrypt = encrypt;
-        this.uuidToBinary = uuidToBinary;
+        this.convert = convert;
     }
     
     @Override
@@ -39,7 +39,7 @@ public class SignUpServiceImpl implements SignUpService {
                 String salt = encrypt.generateSalt();
                 String newPassword = encrypt.getEncrypt(signUpRequestDTO.password(), salt);
                 UUID uuid = UUID.randomUUID();
-                byte[] binary_uuid = uuidToBinary.uuidToBytes(uuid);
+                byte[] binary_uuid = convert.uuidToBytes(uuid);
                 // UUID를 포함한 Users 객체 생성
                 Users newUser = new Users(
                         binary_uuid,

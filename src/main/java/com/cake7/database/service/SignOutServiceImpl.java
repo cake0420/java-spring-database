@@ -2,7 +2,7 @@ package com.cake7.database.service;
 
 import com.cake7.database.dto.SignOutRequestDTO;
 import com.cake7.database.repository.UserSessionRepository;
-import com.cake7.database.util.UuidToBinary;
+import com.cake7.database.util.Convert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ import java.util.UUID;
 public class SignOutServiceImpl implements SignOutService {
     private final Logger logger = LoggerFactory.getLogger(SignOutServiceImpl.class.getName());
     private final UserSessionRepository userSessionRepository;
-    private final UuidToBinary uuidToBinary;
+    private final Convert convert;
 
-    public SignOutServiceImpl(UserSessionRepository userSessionRepository, UuidToBinary uuidToBinary) {
+    public SignOutServiceImpl(UserSessionRepository userSessionRepository, Convert convert) {
         this.userSessionRepository = userSessionRepository;
-        this.uuidToBinary = uuidToBinary;
+        this.convert = convert;
     }
 
     @Override
     public boolean signOut(SignOutRequestDTO signOutRequestDTO) throws Exception {
         UUID uuid = UUID.fromString(signOutRequestDTO.sessionId());
-        byte[] binary = uuidToBinary.uuidToBytes(uuid);
+        byte[] binary = convert.uuidToBytes(uuid);
         logger.debug(uuid.toString());
         try {
                 int count = userSessionRepository.deleteBySessionId(binary);

@@ -84,4 +84,22 @@
             );
         }
 
+        public Optional<Users> findWithUserById(byte[] id) throws ServerException {
+            String sql = """
+                    SELECT u.*
+                    FROM user_sessions us
+                    INNER JOIN %s u ON us.user_id = u.id
+                    WHERE us.id = ?
+                """.formatted(getTableName());
+            try {
+                Users user = getJdbcTemplate().queryForObject(sql, getRowMapper(), id);
+                return Optional.ofNullable(user);
+            } catch (EmptyResultDataAccessException e) {
+                return Optional.empty();
+            } catch (Exception e) {
+                logger.error("Error finding left join user session with user id: {}",e.getMessage());
+                throw new ServerException("server error: "+ e.getMessage());
+            }
+        }
+
     }

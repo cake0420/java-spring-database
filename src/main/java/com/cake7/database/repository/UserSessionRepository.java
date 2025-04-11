@@ -130,5 +130,4 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
             throw new ServerException("Error deleting expired sessions: " + e.getMessage());
         }
     }
-
 }
