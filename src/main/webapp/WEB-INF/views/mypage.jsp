@@ -42,11 +42,11 @@
 </div>
 
 <script>
-    let isMypageData = false
-    // 사용자 정보 가져오기
+    let isMypageDataLoaded = false;
+
     async function loadUserData() {
-        if (isMypageData) return; // 이미 로그아웃 중이면 무시
-        isMypageData = true; // 플래그 설정
+        if (isMypageDataLoaded) return;
+        isMypageDataLoaded = true;
 
         try {
             const sessionId = '${sessionScope.SESSION_ID}';
@@ -68,11 +68,11 @@
             document.getElementById('userEmail').textContent = data.email;
 
         } catch (error) {
+            isMypageDataLoaded = false; // 실패했을 땐 다시 요청 가능하게
             alert('사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요: ' + error.message);
-        } finally {
-            isMypageData = false;
         }
     }
+
 
     // 대출 중인 도서 목록 가져오기
     async function loadCurrentLoans() {
