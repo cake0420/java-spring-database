@@ -130,4 +130,16 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
             throw new ServerException("Error deleting expired sessions: " + e.getMessage());
         }
     }
+
+    public boolean existsById(byte[] sessionId) throws ServerException {
+        String sql = """
+                    SELECT EXISTS (SELECT id FROM %s)
+                """.formatted(getTableName());
+        try {
+            return Boolean.TRUE.equals(getJdbcTemplate().queryForObject(sql, Boolean.class, sessionId));
+        } catch (Exception e) {
+            logger.error("Error checking if user id exists: {}", e.getMessage());
+            throw new ServerException("server error: " + e.getMessage());
+        }
+    }
 }

@@ -1,16 +1,23 @@
 package com.cake7.database.controller;
 
-import jakarta.servlet.http.HttpSession;
+import com.cake7.database.service.SessionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller("charset=UTF-8")
 public class PageController {
     private final Logger logger = LoggerFactory.getLogger(PageController.class.getName());
+    private final SessionServiceImpl sessionService;
+
+    public PageController(SessionServiceImpl sessionService) {
+        this.sessionService = sessionService;
+    }
+
     @GetMapping("/")
-    public String index() {
+    public String index(@CookieValue("SESSION_ID") String sessionId) {
         return "index";
     }
 
@@ -25,9 +32,8 @@ public class PageController {
     }
 
     @GetMapping("/mypage")
-    public String mypage(HttpSession session) {
-        String sessionDTO = (String) session.getAttribute("SESSION_ID");
-        if (sessionDTO == null) {
+    public String mypage(@CookieValue(value = "SESSION_ID", required = false) String sessionId) {
+        if (sessionId == null || !sessionService.isValid(sessionId)) {
             return "redirect:/signin";
         }
         return "mypage";

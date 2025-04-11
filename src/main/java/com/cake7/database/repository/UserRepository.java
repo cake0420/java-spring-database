@@ -86,7 +86,7 @@
 
         public Optional<Users> findWithUserById(byte[] id) throws ServerException {
             String sql = """
-                    SELECT u.*
+                    SELECT u.email, u.name
                     FROM user_sessions us
                     INNER JOIN %s u ON us.user_id = u.id
                     WHERE us.id = ?

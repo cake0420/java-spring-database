@@ -5,10 +5,7 @@ import com.cake7.database.dto.MyPageResponseDTO;
 import com.cake7.database.service.MyPageServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
 
@@ -22,7 +19,8 @@ public class MyPageController {
     }
 
     @PostMapping("/mypage")
-    public ResponseEntity<MyPageResponseDTO> doPost(@RequestBody MyPageRequestDTO myPageRequestDTO) throws ServerException {
+    public ResponseEntity<MyPageResponseDTO> doPost(@CookieValue("SESSION_ID") String sessionId,
+                                                    @RequestBody MyPageRequestDTO myPageRequestDTO) throws ServerException {
         MyPageResponseDTO myPageResponseDTO = myPageServiceImpl.getMyPage(myPageRequestDTO);
         try {
             return ResponseEntity.ok(myPageResponseDTO);

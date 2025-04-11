@@ -15,7 +15,7 @@ public class Convert {
         return bb.array();
     }
 
-    public UUID BytesToUuid(byte[] bytes) {
+    public UUID bytesToUuid(byte[] bytes) {
         if (bytes == null || bytes.length != 16) {
             throw new IllegalArgumentException("UUID 바이트 배열은 16바이트여야 합니다.");
         }

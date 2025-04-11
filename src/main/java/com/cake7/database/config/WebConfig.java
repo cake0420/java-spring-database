@@ -1,6 +1,8 @@
 package com.cake7.database.config;
 
 import com.cake7.database.interceptor.AuthenticationInterceptor;
+import com.cake7.database.repository.UserSessionRepository;
+import com.cake7.database.util.Convert;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,7 +16,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer, HandlerInterceptor {
+    private final UserSessionRepository userSessionRepository;
+    private final Convert convert;
 
+    public WebConfig(UserSessionRepository userSessionRepository, Convert convert) {
+        this.userSessionRepository = userSessionRepository;
+        this.convert = convert;
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -33,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer, HandlerInterceptor {
 
     @Bean
     public AuthenticationInterceptor authenticationInterceptor() {
-        return new AuthenticationInterceptor();
+        return new AuthenticationInterceptor(userSessionRepository, convert);
     }
 
     @Override

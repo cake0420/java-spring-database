@@ -48,6 +48,7 @@
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',  // <-- 쿠키를 포함해서 요청/응답
       body: JSON.stringify({
         email: email,
         password: password
