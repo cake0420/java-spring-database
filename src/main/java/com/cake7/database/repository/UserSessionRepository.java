@@ -16,14 +16,14 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<UserSession> getRowMapper = (rs, rowNum) ->
             new UserSession(
-                    rs.getBytes("sessionId"),
-                    rs.getBytes("userId"),
-                    rs.getString("ipAddress"),
-                    rs.getString("userAgent"),
-                    rs.getTimestamp("createdAt").toLocalDateTime(),
-                    rs.getTimestamp("lastAccessedAt").toLocalDateTime(),
-                    rs.getTimestamp("expiresAt").toLocalDateTime(),
-                    rs.getBoolean("isValid")
+                    rs.getBytes("id"),
+                    rs.getBytes("user_id"),
+                    rs.getString("ip_address"),
+                    rs.getString("user_agent"),
+                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getTimestamp("last_accessed_at").toLocalDateTime(),
+                    rs.getTimestamp("expired_at").toLocalDateTime(),
+                    rs.getBoolean("is_valid")
             );
 
 
@@ -34,7 +34,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
     @Override
     public Map<String, Object> entityToMap(UserSession entity) {
         return Map.of(
-                "session_id", entity.getSessionId(),
+                "id", entity.getSessionId(),
                 "user_id", entity.getUserId(),
                 "ip_address", entity.getIpAddress(),
                 "user_agent", entity.getUserAgent(),
@@ -62,7 +62,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
 
     public int deleteBySessionId(byte[] sessionId) throws ServerException {
         String sql = """
-                    DELETE FROM %s WHERE session_id = ?
+                    DELETE FROM %s WHERE id = ?
                 """.formatted(getTableName());
         try {
             return getJdbcTemplate().update(sql, sessionId);

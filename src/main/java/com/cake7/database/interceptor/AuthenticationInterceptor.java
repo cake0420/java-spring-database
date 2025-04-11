@@ -1,6 +1,5 @@
 package com.cake7.database.interceptor;
 
-import com.cake7.database.dto.UserSessionDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +23,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         // 세션이 있고 SESSION_ID가 있으면 인증 성공
-        UserSessionDTO userSessionDTO = (UserSessionDTO) session.getAttribute("SESSION_ID");
+        String userSessionDTO = (String) session.getAttribute("SESSION_ID");
         logger.debug("Authenticated user accessing {}", request.getRequestURI());
         return true;
     }

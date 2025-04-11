@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class UserSession {
 
-    private final byte[] sessionId;
+    private final byte[] id;
     private final byte[] userId;
     private final String ipAddress;
     private final String userAgent;
@@ -13,10 +13,10 @@ public class UserSession {
     private final LocalDateTime expiresAt;
     private final boolean isValid;
 
-    public UserSession(byte[] sessionId, byte[] userId, String ipAddress,
+    public UserSession(byte[] id, byte[] userId, String ipAddress,
                        String userAgent, LocalDateTime createdAt,
                        LocalDateTime lastAccessedAt, LocalDateTime expiresAt, boolean isValid) {
-        this.sessionId = sessionId;
+        this.id = id;
         this.userId = userId;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
@@ -27,7 +27,7 @@ public class UserSession {
     }
 
     public byte[] getSessionId() {
-        return sessionId;
+        return id;
     }
     public byte[] getUserId() {
         return userId;

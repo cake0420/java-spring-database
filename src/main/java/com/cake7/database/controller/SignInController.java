@@ -27,7 +27,7 @@ public class SignInController {
             UUID sessionId = signInService.signIn(signInRequestDTO);
             if (Objects.nonNull(sessionId)) {
 
-                httpSession.setAttribute("SESSION_ID",sessionId.toString());
+                httpSession.setAttribute("SESSION_ID", sessionId.toString());
                 return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("아이디 또는 비밀번호가 잘못되었습니다.");

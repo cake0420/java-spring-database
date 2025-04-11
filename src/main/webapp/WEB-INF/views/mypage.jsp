@@ -42,11 +42,30 @@
 </div>
 
 <script>
+
     // 사용자 정보 가져오기 (실제 구현 시 API 호출)
     function loadUserData() {
-        // 실제 구현 시 API 호출하여 사용자 정보 가져오기
-        document.getElementById('userName').textContent = '홍길동';
-        document.getElementById('userEmail').textContent = 'hong@example.com';
+        const sessionId = '${sessionScope.SESSION_ID}';
+        fetch('${pageContext.request.contextPath}/api/protected/mypage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                sessionId : sessionId
+            })
+        }).then(response =>{
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+        }).then(data => {
+            document.getElementById('userName').textContent = data.name;
+            document.getElementById('userEmail').textContent = data.email;
+        })
+            .catch(error => {
+                alert('사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.:' + error);
+            });
     }
 
     // 대출 중인 도서 목록 가져오기 (실제 구현 시 API 호출)
