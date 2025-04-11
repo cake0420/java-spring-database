@@ -4,8 +4,8 @@ import com.cake7.database.config.AppConfig;
 import com.cake7.database.config.DatabaseConfig;
 import com.cake7.database.domain.Users;
 import com.cake7.database.repository.UserRepository;
+import com.cake7.database.util.Convert;
 import com.cake7.database.util.Encrypt;
-import com.cake7.database.util.UuidToBinary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -27,21 +27,21 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SignUpServiceTest {
 
     private final UserRepository userRepository;
-    private final UuidToBinary uuidToBinary;
     private final Encrypt encrypt;
     private Users testUser;
+    private final Convert convert;
 
     @Autowired
-    public SignUpServiceTest(UserRepository userRepository, UuidToBinary uuidToBinary, Encrypt encrypt) {
+    public SignUpServiceTest(UserRepository userRepository, Encrypt encrypt, Convert convert) {
         this.userRepository = userRepository;
-        this.uuidToBinary = uuidToBinary;
+        this.convert = convert;
         this.encrypt = encrypt;
     }
 
     @BeforeEach
     void setUp() {
         UUID uuid = UUID.randomUUID();
-        byte[] binaryUuid = uuidToBinary.uuidToBytes(uuid);
+        byte[] binaryUuid = convert.uuidToBytes(uuid);
         String password = "q1w@e3r$";
         String salt = encrypt.generateSalt();
         String newPassword = encrypt.getEncrypt(password, salt);
@@ -68,7 +68,7 @@ public class SignUpServiceTest {
         String email = "test2@example.com";
 
         UUID uuid = UUID.randomUUID();
-        byte[] binaryUuid = uuidToBinary.uuidToBytes(uuid);
+        byte[] binaryUuid = convert.uuidToBytes(uuid);
         String password = "q1w@e3r$";
         String salt = encrypt.generateSalt();
         String newPassword = encrypt.getEncrypt(password, salt);
