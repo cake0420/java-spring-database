@@ -1,6 +1,7 @@
 package com.cake7.database.config;
 
 import com.cake7.database.interceptor.AuthenticationInterceptor;
+import com.cake7.database.interceptor.CsrfInterceptor;
 import com.cake7.database.repository.UserSessionRepository;
 import com.cake7.database.util.Convert;
 import org.springframework.context.annotation.Bean;
@@ -44,10 +45,18 @@ public class WebConfig implements WebMvcConfigurer, HandlerInterceptor {
         return new AuthenticationInterceptor(userSessionRepository, convert);
     }
 
+    @Bean
+    public CsrfInterceptor csrfInterceptor() {
+        return new CsrfInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(csrfInterceptor())
+                .addPathPatterns("/**");
+
         registry.addInterceptor(authenticationInterceptor())
                 .addPathPatterns("/api/protected/**")  // 보호된 경로 패턴
-                .excludePathPatterns("/api/login", "/api/sign-up");  // 제외할 경로
+                .excludePathPatterns("/api/sign-in", "/api/sign-up", "/api/sign-out");  // 제외할 경로
     }
 }
