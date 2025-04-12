@@ -17,7 +17,7 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public String index(@CookieValue("SESSION_ID") String sessionId) {
+    public String index(@CookieValue(value = "SESSION_ID", required = false) String sessionId) {
         return "index";
     }
 

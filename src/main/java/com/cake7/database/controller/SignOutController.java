@@ -22,7 +22,7 @@ public class SignOutController {
     }
 
     @PostMapping("/sign-out")
-    public ResponseEntity<String> doPost(@RequestBody SignOutRequestDTO signOutRequestDTO, HttpServletResponse  response, HttpSession httpSession) {
+    public ResponseEntity<String> doPost( @RequestBody SignOutRequestDTO signOutRequestDTO, HttpServletResponse  response, HttpSession httpSession) {
         try {
             boolean result = signOutServiceImpl.signOut(signOutRequestDTO);
             httpSession.invalidate();
