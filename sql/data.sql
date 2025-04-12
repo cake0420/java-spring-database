@@ -32,7 +32,7 @@ CREATE TABLE book_loans (
 
 CREATE TABLE user_sessions (
     id BINARY(16) PRIMARY KEY NOT NULL ,
-    user_id BINARY(16) UNIQUE NOT NULL ,
+    user_id BINARY(16) NOT NULL ,
     ip_address VARCHAR(45),
     user_agent TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ,

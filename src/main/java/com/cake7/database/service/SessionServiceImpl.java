@@ -1,6 +1,5 @@
 package com.cake7.database.service;
 
-import com.cake7.database.domain.UserSession;
 import com.cake7.database.repository.UserSessionRepository;
 import com.cake7.database.util.Convert;
 import org.slf4j.Logger;
@@ -60,15 +59,5 @@ public class SessionServiceImpl implements SessionService {
                     cache.put(sessionId, convert.bytesToUuid(user).toString());
                     return Arrays.toString(user);
                 });
-    }
-
-    @Override
-    public void createSession(String sessionId, UserSession user) {
-
-    }
-
-    @Override
-    public void removeSession(String sessionId) {
-
     }
 }

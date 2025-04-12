@@ -48,11 +48,14 @@ public class SignInServiceImpl implements SignInService {
                 if(user.get().getPassword().equals(encryptPassword)) {
                     logger.debug("user email: {}", user.get().getEmail());
 
+                    String clientIp = request.getHeader("x-forwarded-for");
+                    if (clientIp == null || clientIp.isEmpty()) {
+                        clientIp = request.getRemoteAddr();
+                    }
                     UserSession userSession = new UserSession(
                                                                 convert.uuidToBytes(sessionUUID),
                                                                 user.get().getId(),
-                                                                request.getRemoteAddr(),
-                                                                request.getHeader("User-Agent"),
+                                                                clientIp,                                                                request.getHeader("User-Agent"),
                                                                 now,
                                                                 now,
                                                                 now.plusDays(7),
