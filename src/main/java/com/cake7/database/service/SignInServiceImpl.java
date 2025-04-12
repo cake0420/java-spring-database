@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.rmi.ServerException;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 
 @Service
+@Transactional
 public class SignInServiceImpl implements SignInService {
     private final HttpServletRequest request;
     private final Logger logger = LoggerFactory.getLogger(SignInServiceImpl.class);

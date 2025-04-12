@@ -6,12 +6,14 @@ import com.cake7.database.util.Convert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.rmi.ServerException;
 import java.util.Arrays;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class SignOutServiceImpl implements SignOutService {
     private final Logger logger = LoggerFactory.getLogger(SignOutServiceImpl.class.getName());
     private final UserSessionRepository userSessionRepository;
