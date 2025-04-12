@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 public class MyPageServiceImpl implements MyPageService{
-    private final Logger logger = LoggerFactory.getLogger(MyPageServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(MyPageServiceImpl.class.getName());
     private final UserRepository userRepository;
     private final Convert convert;
 

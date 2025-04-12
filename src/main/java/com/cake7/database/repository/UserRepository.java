@@ -1,7 +1,6 @@
     package com.cake7.database.repository;
 
     import com.cake7.database.domain.Users;
-    import com.cake7.database.util.Convert;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
     import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,9 +14,8 @@
 
     @Repository
     public class UserRepository implements JdbcRepository<Users, byte[]> {
-        private final Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
+        private static final Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
         private final JdbcTemplate jdbcTemplate;
-        private final Convert convert;
         private final RowMapper<Users> getRowMapper = (rs, rowNum)
                 -> new Users(
                     rs.getBytes("id"),
@@ -27,9 +25,8 @@
                     rs.getString("salt")
                 );
 
-        public UserRepository(JdbcTemplate jdbcTemplate, Convert convert) {
+        public UserRepository(JdbcTemplate jdbcTemplate) {
             this.jdbcTemplate = jdbcTemplate;
-            this.convert = convert;
         }
 
         @Override

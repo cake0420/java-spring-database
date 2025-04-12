@@ -23,7 +23,7 @@ import java.util.UUID;
 @Transactional
 public class SignInServiceImpl implements SignInService {
     private final HttpServletRequest request;
-    private final Logger logger = LoggerFactory.getLogger(SignInServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SignInServiceImpl.class);
     private final UserRepository userRepository;
     private final Encrypt encrypt;
     private final UserSessionRepository userSessionRepository;

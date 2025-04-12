@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public class UserSessionRepository implements JdbcRepository<UserSession, byte[]>{
-    private final Logger logger = LoggerFactory.getLogger(UserSessionRepository.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(UserSessionRepository.class.getName());
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<UserSession> getRowMapper = (rs, rowNum) ->
             new UserSession(

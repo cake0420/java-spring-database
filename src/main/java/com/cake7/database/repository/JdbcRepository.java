@@ -1,7 +1,5 @@
 package com.cake7.database.repository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -10,8 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface JdbcRepository<T, ID> {
-    Logger logger = LoggerFactory.getLogger(JdbcRepository.class);
-
     Map<String, Object> entityToMap(T entity);
     JdbcTemplate getJdbcTemplate();
     String getTableName();
@@ -25,7 +21,6 @@ public interface JdbcRepository<T, ID> {
             T result = getJdbcTemplate().queryForObject(sql, getRowMapper(), id);
             return Optional.ofNullable(result);
         } catch (Exception e) {
-            logger.error("Error finding by ID: " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -52,7 +47,6 @@ public interface JdbcRepository<T, ID> {
             getJdbcTemplate().update(sql, values);
             return entity;
         } catch (Exception e) {
-            logger.error("Error saving entity: " + e.getMessage());
             throw new ServerException("server error " + e.getMessage());
         }
     }

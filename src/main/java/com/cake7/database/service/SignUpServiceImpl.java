@@ -18,7 +18,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class SignUpServiceImpl implements SignUpService {
-    private final Logger logger = LoggerFactory.getLogger(SignUpServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SignUpServiceImpl.class.getName());
 
     private final UserRepository userRepository;
     private final Encrypt encrypt;

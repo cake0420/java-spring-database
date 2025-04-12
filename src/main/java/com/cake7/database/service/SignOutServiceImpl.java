@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class SignOutServiceImpl implements SignOutService {
-    private final Logger logger = LoggerFactory.getLogger(SignOutServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SignOutServiceImpl.class.getName());
     private final UserSessionRepository userSessionRepository;
     private final Convert convert;
 
