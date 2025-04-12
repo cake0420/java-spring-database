@@ -51,6 +51,8 @@ public class SignInServiceImpl implements SignInService {
                     String clientIp = request.getHeader("x-forwarded-for");
                     if (clientIp == null || clientIp.isEmpty()) {
                         clientIp = request.getRemoteAddr();
+                    } else {
+                        clientIp = clientIp.split(",")[0].trim(); // 있으면 첫 번째 IP가 유저 IP
                     }
                     UserSession userSession = new UserSession(
                                                                 convert.uuidToBytes(sessionUUID),
