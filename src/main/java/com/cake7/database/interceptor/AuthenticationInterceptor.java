@@ -32,7 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     String sessionId = cookie.getValue();
                     UUID uuid = UUID.fromString(sessionId);
                     // 2. DB에서 유효한 세션인지 확인한다
-                    boolean exists = userSessionRepository.existsById(convert.uuidToBytes(uuid));
+                    boolean exists = userSessionRepository.existsByIdAndValid(convert.uuidToBytes(uuid), true);
                     if (exists) {
                         // 3. 세션에 다시 넣어주면 JSP에서도 sessionScope로 접근 가능
                         request.getSession(true).setAttribute("SESSION_ID", sessionId);

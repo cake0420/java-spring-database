@@ -142,12 +142,12 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
         }
     }
 
-    public boolean existsById(byte[] sessionId) throws ServerException {
+    public boolean existsByIdAndValid(byte[] sessionId, boolean valid) throws ServerException {
         String sql = """
-                SELECT EXISTS (SELECT 1 FROM %s WHERE id = ?)
+                SELECT EXISTS (SELECT 1 FROM %s WHERE id = ? AND is_valid = ?)
             """.formatted(getTableName());
         try {
-            return Boolean.TRUE.equals(getJdbcTemplate().queryForObject(sql, Boolean.class, sessionId));
+            return Boolean.TRUE.equals(getJdbcTemplate().queryForObject(sql, Boolean.class, sessionId, valid));
         } catch (Exception e) {
             logger.error("Error checking if session id exists: {}", e.getMessage());
             throw new ServerException("server error: " + e.getMessage());
