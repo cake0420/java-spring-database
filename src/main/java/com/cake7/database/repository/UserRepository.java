@@ -95,7 +95,14 @@
                     WHERE us.id = ?
                 """.formatted(getTableName());
             try {
-                Users user = getJdbcTemplate().queryForObject(sql, getRowMapper(), id);
+                Users user = getJdbcTemplate().queryForObject(sql,
+                        (rs, rowNum) -> new Users(
+                        rs.getBytes("id"),
+                        rs.getString("name"),
+                        rs.getString("email")
+                        ),
+                        id
+                );
                 return Optional.ofNullable(user);
             } catch (EmptyResultDataAccessException e) {
                 return Optional.empty();
