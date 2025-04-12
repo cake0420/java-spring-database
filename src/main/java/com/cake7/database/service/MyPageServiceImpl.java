@@ -1,7 +1,6 @@
 package com.cake7.database.service;
 
 import com.cake7.database.domain.Users;
-import com.cake7.database.dto.MyPageRequestDTO;
 import com.cake7.database.dto.MyPageResponseDTO;
 import com.cake7.database.repository.UserRepository;
 import com.cake7.database.util.Convert;
@@ -25,8 +24,8 @@ public class MyPageServiceImpl implements MyPageService{
     }
 
     @Override
-    public MyPageResponseDTO getMyPage(MyPageRequestDTO myPageRequestDTO) throws ServerException {
-        UUID uuid = UUID.fromString(myPageRequestDTO.sessionId());
+    public MyPageResponseDTO getMyPage(String sessionId) throws ServerException {
+        UUID uuid = UUID.fromString(sessionId);
         byte[] binary = convert.uuidToBytes(uuid);
         logger.debug("binary: {}", binary);
         try {

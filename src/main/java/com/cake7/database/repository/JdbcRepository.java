@@ -31,7 +31,7 @@ public interface JdbcRepository<T, ID> {
     }
 
 
-    default void save(T entity) throws ServerException {
+    default T save(T entity) throws ServerException {
         Map<String, Object> columnValues = entityToMap(entity);
         if (columnValues.isEmpty()) {
             throw new IllegalArgumentException("Entity must have at least one column value");
@@ -50,6 +50,7 @@ public interface JdbcRepository<T, ID> {
 
         try {
             getJdbcTemplate().update(sql, values);
+            return entity;
         } catch (Exception e) {
             logger.error("Error saving entity: " + e.getMessage());
             throw new ServerException("server error " + e.getMessage());

@@ -1,6 +1,7 @@
     package com.cake7.database.repository;
 
     import com.cake7.database.domain.Users;
+    import com.cake7.database.util.Convert;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
     import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,6 +17,7 @@
     public class UserRepository implements JdbcRepository<Users, byte[]> {
         private final Logger logger = LoggerFactory.getLogger(UserRepository.class.getName());
         private final JdbcTemplate jdbcTemplate;
+        private final Convert convert;
         private final RowMapper<Users> getRowMapper = (rs, rowNum)
                 -> new Users(
                     rs.getBytes("id"),
@@ -25,8 +27,9 @@
                     rs.getString("salt")
                 );
 
-        public UserRepository(JdbcTemplate jdbcTemplate) {
+        public UserRepository(JdbcTemplate jdbcTemplate, Convert convert) {
             this.jdbcTemplate = jdbcTemplate;
+            this.convert = convert;
         }
 
         @Override
@@ -86,7 +89,7 @@
 
         public Optional<Users> findWithUserById(byte[] id) throws ServerException {
             String sql = """
-                    SELECT u.email, u.name
+                    SELECT u.id, u.email, u.name
                     FROM user_sessions us
                     INNER JOIN %s u ON us.user_id = u.id
                     WHERE us.id = ?
@@ -97,7 +100,7 @@
             } catch (EmptyResultDataAccessException e) {
                 return Optional.empty();
             } catch (Exception e) {
-                logger.error("Error finding left join user session with user id: {}",e.getMessage());
+                logger.error("Error finding inner join user session with user id: {}",e.getMessage());
                 throw new ServerException("server error: "+ e.getMessage());
             }
         }

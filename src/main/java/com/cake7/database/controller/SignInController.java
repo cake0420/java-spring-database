@@ -2,6 +2,7 @@ package com.cake7.database.controller;
 
 import com.cake7.database.dto.SignInRequestDTO;
 import com.cake7.database.service.SignInServiceImpl;
+import com.cake7.database.util.Convert;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,8 +20,11 @@ import java.util.UUID;
 @RequestMapping(value = "/api", produces = "text/html; charset=UTF-8")  // 엔드포인트에 공통 URL이 있다면 추가됨
 public class SignInController {
     private final SignInServiceImpl signInService;
-    public SignInController(SignInServiceImpl signInService) {
+    private final Convert convert;
+
+    public SignInController(SignInServiceImpl signInService, Convert convert) {
         this.signInService = signInService;
+        this.convert = convert;
     }
 
     @PostMapping("/sign-in")

@@ -51,11 +51,10 @@
         try {
             const sessionId = '${sessionScope.SESSION_ID}';
             const response = await fetch('${pageContext.request.contextPath}/api/protected/mypage', {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ sessionId })
             });
 
             if (!response.ok) {

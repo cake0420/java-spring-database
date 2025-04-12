@@ -18,7 +18,7 @@ public class SessionServiceImpl implements SessionService {
     private final UserSessionRepository userSessionRepository;
     private final Map<String, String> cache = new ConcurrentHashMap<>();
     private final Convert convert;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class.getName());
 
     public SessionServiceImpl(UserSessionRepository userSessionRepository, Convert convert) {
         this.userSessionRepository = userSessionRepository;

@@ -3,12 +3,14 @@ package com.cake7.database.repository;
 import com.cake7.database.domain.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.rmi.ServerException;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserSessionRepository implements JdbcRepository<UserSession, byte[]>{
@@ -73,7 +75,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
     }
 
     @Override
-    public void save(UserSession entity) {
+    public UserSession save(UserSession entity) {
         Map<String, Object> columnValues = entityToMap(entity);
         if (columnValues.isEmpty()) {
             throw new IllegalArgumentException("Entity must have at least one column value");
@@ -101,8 +103,16 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
                 SET last_accessed_at = NOW(),\s
                     expired_at = DATE_ADD(NOW(), INTERVAL 7 DAY)\s
                 WHERE user_id = ? AND ip_address = ? AND user_agent = ? AND is_valid = true
+                LIMIT 1
            \s""".formatted(getTableName());
                 getJdbcTemplate().update(updateSql,
+                        entity.getUserId(), entity.getIpAddress(), entity.getUserAgent());
+                String selectSql = """
+                            SELECT * FROM %s\s
+                            WHERE user_id = ? AND ip_address = ? AND user_agent = ? AND is_valid = true
+                            LIMIT 1
+                        """.formatted(getTableName());
+                return getJdbcTemplate().queryForObject(selectSql, getRowMapper(),
                         entity.getUserId(), entity.getIpAddress(), entity.getUserAgent());
             } else {
                 String columns = String.join(", ", columnValues.keySet());
@@ -112,6 +122,7 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
                 """.formatted(getTableName(), columns, placeholders);
                 Object[] values = columnValues.values().toArray();
                 getJdbcTemplate().update(insertSql, values);
+                return entity;
             }
         } catch (Exception e) {
             logger.error("Error saving user session: {}", e.getMessage(), e);
@@ -133,13 +144,31 @@ public class UserSessionRepository implements JdbcRepository<UserSession, byte[]
 
     public boolean existsById(byte[] sessionId) throws ServerException {
         String sql = """
-                    SELECT EXISTS (SELECT id FROM %s)
-                """.formatted(getTableName());
+                SELECT EXISTS (SELECT 1 FROM %s WHERE id = ?)
+            """.formatted(getTableName());
         try {
             return Boolean.TRUE.equals(getJdbcTemplate().queryForObject(sql, Boolean.class, sessionId));
         } catch (Exception e) {
-            logger.error("Error checking if user id exists: {}", e.getMessage());
+            logger.error("Error checking if session id exists: {}", e.getMessage());
             throw new ServerException("server error: " + e.getMessage());
+        }
+    }
+
+    public Optional<UserSession> findBySessionIdWithUserId(String email) throws ServerException {
+        String sql = """
+                    SELECT *\s
+                    FROM %s us
+                    INNER JOIN users u ON us.user_id = u.id
+                    WHERE u.email = ?;
+                """.formatted(getTableName());
+        try {
+            UserSession user = getJdbcTemplate().queryForObject(sql, getRowMapper(), email);
+            return Optional.ofNullable(user);
+        }  catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        } catch (Exception e) {
+            logger.error("Error finding session for email {}: {}", email, e.getMessage());
+            throw new ServerException("server error: "+ e.getMessage());
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.cake7.database.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-public record UserSessionDTO(String sessionId) implements Serializable {
+public record UserSessionDTO(LocalDateTime lastAccessedAt, LocalDateTime expiresAt) implements Serializable {
 }

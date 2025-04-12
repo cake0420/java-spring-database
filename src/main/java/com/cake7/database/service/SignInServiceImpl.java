@@ -56,9 +56,9 @@ public class SignInServiceImpl implements SignInService {
                                                                 now.plusDays(7),
                                                                 true
                                                             );
-                    userSessionRepository.save(userSession);
-                    logger.debug("user session id: {}", userSession);
-                    return convert.bytesToUuid(userSession.getSessionId());
+                    UserSession users = userSessionRepository.save(userSession);
+                    logger.debug("user session id: {}", convert.bytesToUuid(users.getSessionId()));
+                    return convert.bytesToUuid(users.getSessionId());
                 }
             }
             return null;
