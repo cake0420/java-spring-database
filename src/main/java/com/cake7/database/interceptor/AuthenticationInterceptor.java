@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
     private final UserSessionRepository userSessionRepository;
     private final Convert convert;
 

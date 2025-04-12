@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.util.List;
 
 public class CsrfInterceptor implements HandlerInterceptor {
-    private final Logger logger = LoggerFactory.getLogger(CsrfInterceptor.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CsrfInterceptor.class.getName());
     private static final List<String> ALLOWED_ORIGINS = List.of("https://java-spring-database.onrender.com",
                                                                 "http://localhost:8080",
                                                                 "https://eastern-rowena-jack6767-df59f302.koyeb.app");
